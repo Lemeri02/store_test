@@ -1,3 +1,10 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :stores do
+    resources :products, shallow: true do
+      collection do
+        get :move_product
+        get :sell_product
+      end
+    end
+  end
 end
