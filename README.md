@@ -45,13 +45,13 @@ $ rails db:seed
 Посмотреть все продукты на складе с `id: 1` (всего db:seed создаст 5 складов с продуктами)
 
 ```
-$ curl "http://localhost:3000/stores/1/products"
+localhost:3000/stores/1/products
 ```
 
 Посмотреть продукт с `id: 1` (всего в демо-базе 15 продуктов)
 
 ```
-$ curl "http://localhost:3000/products/1"
+localhost:3000/products/1
 ```
 
 #### Endpoint 1 - перенос продукта со склада на склад.
@@ -59,10 +59,10 @@ $ curl "http://localhost:3000/products/1"
 Ниже приведен пример перемещения со склада `id:1` на склад `id:2` продукта с `sku:SKU35` в количестве `1 единицы`
 
 ```
-$ localhost:3000/stores/1/products/move_product?product_sku=SKU35&target_store_id=2&quantity=1
+localhost:3000/stores/1/products/move_product?product_sku=SKU35&target_store_id=2&quantity=1
 ```
 где, <br>
-`product_sku` - идентификатор продукта <br>
+`product_sku` - идентификатор продукта (необходимый идентификатор продукта `SKUXX`, можно узнать обращением по адресу `localhost:3000/stores/1/products`)<br>
 `target_store_id` - `id` склада назначения, куда нужно переносить продукт <br>
 `quantity` - количество продукта
 
@@ -72,7 +72,7 @@ $ localhost:3000/stores/1/products/move_product?product_sku=SKU35&target_store_i
 Ниже пример реализации продукта с `sku:SKU32` со склада с `id:1` в количестве `1 единицы`
 
 ```
-$ localhost:3000/stores/1/products/sell_product?product_sku=SKU32&quantity=1
+localhost:3000/stores/1/products/sell_product?product_sku=SKU32&quantity=1
 ```
 
 ### Тестирование
