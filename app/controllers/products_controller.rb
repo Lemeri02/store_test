@@ -31,13 +31,11 @@ class ProductsController < ApplicationController
   def sell_product
     # Query sample
     # localhost:3000/stores/1/products/sell_product?product_sku=SKU69&quantity=1
-    @product = SellProduct.new.(
+    @product = SellProduct.new.call(
       store_id: permit_params[:store_id],
       product_sku: permit_params[:product_sku],
       quantity: permit_params[:quantity]
     )
-
-    # @product = product.value_or("Something went wrong!")
 
     render json: @product, include: :price
   end

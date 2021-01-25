@@ -1,25 +1,28 @@
+require 'dry/monads'
+require 'dry/monads/do'
+
 class SellProduct
   include Dry::Monads[:result]
+  include Dry::Monads::Do.for(:call)
 
   def call(store_id:, product_sku:, quantity:)
-    find_store(store_id).bind do |store|
-      find_product(store_id: store_id, product_sku: product_sku).fmap do |product|
-        quantity = quantity.to_f
+    quantity = quantity.to_f
 
-        if valid?(quantity) && (product.quantity >= quantity)
-          cost = product.price.amount * quantity
+    store = yield find_store(store_id)
+    product = yield find_product(store_id: store_id, product_sku: product_sku)
 
-          new_quantity = product.quantity - quantity
+    if valid?(quantity) && (product.quantity >= quantity)
+      total_amount = product.price.amount * quantity
 
-          new_store_balance = store.balance.amount + cost
+      new_product_quantity = product.quantity - quantity
 
-          store.balance.update(amount: new_store_balance)
-          product.update(quantity: new_quantity)
-          Success(product)
-        else
-          Failure('Error: Inncorrect quantity or product unavailable')
-        end
-      end
+      new_store_balance = store.balance.amount + total_amount
+
+      store.balance.update(amount: new_store_balance)
+      product.update(quantity: new_product_quantity)
+      Success(product)
+    else
+      Failure('Error: Inncorrect quantity or product unavailable')
     end
   end
 
@@ -45,7 +48,7 @@ class SellProduct
     if product
       Success(product)
     else
-      Failure("Product with id: #{product_id} in store with id: #{store_id} not found")
+      Failure("Product with sku:#{product_sku} in store with id: #{store_id} not found")
     end
   end
 end
